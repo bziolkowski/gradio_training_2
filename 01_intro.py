@@ -10,9 +10,10 @@ with gr.Blocks() as ui:
     with gr.Row():
         text_input = gr.Textbox(placeholder="Default text", label="Tu coś wpisujemy")
         text_output = gr.Textbox(visible=False)
-    button = gr.Button(value="Inkrementuj")
+    button = gr.Button(value="Inkrementuj", size='sm')
 
     text_input.submit(process_text, text_input, [text_output, button, text_input])
     button.click(fn=lambda x: int(x)+1, inputs=text_input, outputs=text_output)
+
 
 ui.launch()
