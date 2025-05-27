@@ -1,5 +1,7 @@
+import gradio as gr
+
 def calc(text):
-    operation_list = text.split( )
+    operation_list = text.split(' ')
     arg1 = int(operation_list[0])
     arg2 = int(operation_list[2])
     operation = operation_list[1]
@@ -16,6 +18,14 @@ def calc(text):
     elif operation == "/":
         result = arg1 / arg2
     else:
-        return "Invalid operation"
+        result = "Invalid operation"
 
-    return result
+    return gr.Textbox(value=result, visible=True)
+
+with gr.Blocks() as ui:
+    input = gr.Textbox(placeholder="Podaj działanie")
+    output = gr.Textbox(visible=False)
+
+    input.submit(fn=calc, inputs=input, outputs=output)
+
+ui.launch()
