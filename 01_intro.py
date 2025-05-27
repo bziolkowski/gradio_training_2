@@ -6,8 +6,10 @@ def process_text(text):
 with gr.Blocks() as ui:
     title_1 = gr.Markdown("### Tytuł strony")
     title_2 = gr.Markdown('<p style="text-align: center;">Wyśrodkuje się </p>')
-    text_input = gr.Textbox(placeholder="Default text", label="Tu coś wpisujemy")
-    text_output = gr.Textbox(visible=False)
+    # Obok siebie, na życzenie grupy (drugi "zniknięty" na początku)
+    with gr.Row():
+        text_input = gr.Textbox(placeholder="Default text", label="Tu coś wpisujemy")
+        text_output = gr.Textbox(visible=False)
     button = gr.Button(value="Inkrementuj")
 
     text_input.submit(process_text, text_input, [text_output, button])
