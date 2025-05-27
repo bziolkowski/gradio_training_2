@@ -1,7 +1,7 @@
 import gradio as gr
 from datetime import datetime
 
-# Takie podejśćie generuje problemy
+# Takie podejście generuje problemy
 
 current_time = str(datetime.now().time())
 
