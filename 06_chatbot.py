@@ -1,3 +1,4 @@
+import gradio
 import gradio as gr
 from openai import AzureOpenAI
 from dotenv import load_dotenv
@@ -25,7 +26,7 @@ def respond(text, history):
     conversation.append(
         {"role": "assistant", "content": response.choices[0].message.content}
     )
-    return "", conversation
+    return conversation
 
 def respond_stream(text, history):
     conversation = []
@@ -46,9 +47,25 @@ def respond_stream(text, history):
                 conversation[-1]["content"] += chunk_text
                 yield conversation
 
+def feedback(vote: gr.LikeData):
+    print(f"Vote received. Liked: {vote.liked}")
+    print(f"Index of the message with feedback: {vote.index}")
+    print(f"Message content: {vote.value}")
 
-with gr.Blocks() as ui:
+
+def clear_input(text):
+    return "", text
+
+with gr.Blocks(css="footer{display:none !important}") as ui:
     chatbot = gr.Chatbot(type="messages")
     input = gr.Textbox()
-    input.submit(fn=respond_stream, inputs=[input, chatbot], outputs=chatbot, show_progress='minimal')
+    input_memory = gr.State("")
+
+    # input.submit(fn=respond, inputs=[input, chatbot], outputs=chatbot, show_progress='minimal')
+    input.submit(fn=clear_input, inputs=input, outputs=[input, input_memory]).then(fn=respond_stream, inputs=[input_memory, chatbot], outputs=chatbot, show_progress='minimal')
+    chatbot.like(fn=feedback)
+
 ui.launch()
+
+# Uruchomienie serwera z dodatkowymi parametrami
+# ui.launch(server_name="0.0.0.0", auth=[("admin", "admin")], auth_message="Zaloguj się", root_path="/app", pwa=True)
